@@ -54,7 +54,8 @@ defmodule CryptoMonkey.MixProject do
       {:phoenix_live_view, "~> 0.3.0"},
       # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
-      {:kraken_x, path: "../kraken_x"},
+      # {:kraken_x, path: "../kraken_x"},
+      {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"},
       # {:binance, "~> 0.7.1"},
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false}
