@@ -1,6 +1,6 @@
 defmodule CryptoMonkey.Boundary.Signal.Server do
   use GenServer
-  require Logger
+  import Logger, only: [info: 1]
   alias CryptoMonkey.Boundary.Signal.{Item}
 
   def start_link(signal) when is_list(signal) do
@@ -9,7 +9,7 @@ defmodule CryptoMonkey.Boundary.Signal.Server do
 
   def new_signal(pid, signal) do
     GenServer.cast(pid, {:new_signal, signal})
-    Logger.info("New Signal")
+    info("New Signal")
   end
 
   def list_signal(pid) do

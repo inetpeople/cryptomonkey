@@ -39,7 +39,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
 
     <table>
     <tr>
-      <td>Ticker/td>
+      <td>Ticker</td>
       <td>Mark Price</td>
       <td>Ask Price</td>
       <td>Ask Size</td>
@@ -131,14 +131,16 @@ defmodule CryptoMonkeyWeb.TickerLive do
     }
   end
 
+  alias CryptoMonkey.Boundary.Kraken
+
   def mount(_session, socket) do
     state = new()
     product_ids = state.subscribed_tickers
-    # KrakenFuturex.subscribe_ticker(KrakenFuturex, product_ids)
-    # KrakenFuturex.get_open_positions(KrakenFuturex)
-    # KrakenFuturex.get_account_balances_and_margins(KrakenFuturex)
-    # KrakenFuturex.get_open_orders_verbose(KrakenFuturex)
-    # KrakenFuturex.get_open_orders(KrakenFuturex)
+    Kraken.subscribe_channels(Kraken, product_ids)
+    Kraken.get_open_positions(Kraken)
+    # Kraken.get_account_balances_and_margins(Kraken)
+    # Kraken.get_open_orders_verbose(Kraken)
+    # Kraken.get_open_orders(Kraken)
 
     if connected?(socket) do
       :ok = CryptoMonkeyWeb.Endpoint.subscribe("krakenx_futures")

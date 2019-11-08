@@ -1,5 +1,5 @@
 defmodule CryptoMonkey.Boundary.Signal.Item do
-  require Logger
+  import Logger, only: [info: 1, warn: 1]
   # @enforce_keys [:received_signal]
 
   defstruct received_signal: "",
@@ -25,7 +25,8 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
 
       _ ->
         item = %{item | recognized_signal: true, received_signal: signal}
-        Logger.info("New Signal Map received")
+        info("New Signal Map received")
+        inspect(item)
         {:ok, item}
     end
   end
@@ -35,7 +36,7 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
 
     case import_signal(signal) do
       {:ok, signal} ->
-        Logger.info("New Signal String received")
+        info("New Signal String received")
 
         item =
           struct(
@@ -49,7 +50,7 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
 
       {:ok, signal, :partial} ->
         item = struct(new_item, signal)
-        Logger.warn("String Signal with unknown Values found!")
+        warn("String Signal with unknown Values found!")
         {:ok, item}
     end
   end
