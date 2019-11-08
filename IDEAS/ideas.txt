@@ -1,0 +1,11 @@
+https://www.tradingview.com/script/2M9I2sgP-HOWTO-Skip-consecutive-signals/
+https://www.tradingview.com/script/0KrB3hnV-TRAILING-STOP-LOSS-TO-LONG-AND-SHORT/
+https://www.tradingview.com/script/N0sqH59N-Simple-Trailing-stop/
+
+
+
+Elixir:
+User Roles
+https://dennisbeatty.com/2019/08/20/ecto-associations-in-phoenix-liveview-one-to-many.html
+Todo List with pubsub and liveview
+https://dennisbeatty.com/2019/04/24/how-to-create-a-todo-list-with-phoenix-liveview.html

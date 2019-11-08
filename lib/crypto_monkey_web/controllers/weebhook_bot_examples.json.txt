@@ -1,0 +1,87 @@
+// for deal start signal
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0
+}
+// Message to close order at Market Price 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "close_at_market_price"
+}
+// Message to close all deals at Market Price
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "close_at_market_price_all"
+}
+// Message to close all deals at Market Price and stop bot
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "close_at_market_price_all_and_stop_bot"
+}
+// Message to cancel deal 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "cancel"
+}
+// Message to cancel all bot deals and stop bot 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "cancel_all_and_stop_bot"
+}
+// Message to cancel all active deals 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "cancel_all"
+}
+// Message to stop bot 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "stop_bot"
+}
+// Message to start bot 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "start_bot"
+}
+// Message to start bot and deal 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "start_bot_and_start_deal"
+}
+// Start trailing 
+{
+    "message_type": "bot",
+    "bot_id": 658342,
+    "email_token": "5751efb3-e4ca-4ac5-ad3d-b3a1abd9c63f",
+    "delay_seconds": 0,
+    "action": "start_trailing"
+}
