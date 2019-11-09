@@ -43,7 +43,7 @@ defmodule CryptoMonkey.MixProject do
       {:phoenix, "~> 1.4.10"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.1"},
+      {:ecto_sql, "~> 3.2.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -56,6 +56,7 @@ defmodule CryptoMonkey.MixProject do
       {:httpoison, "~> 1.6"},
       # {:kraken_x, path: "../kraken_x"},
       {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"},
+      # {:ex_money, "~> 4.0"},
       # {:binance, "~> 0.7.1"},
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false}

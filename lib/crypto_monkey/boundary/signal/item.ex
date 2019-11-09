@@ -12,11 +12,17 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
             signal_price: "",
             recognized_signal: false
 
-  #  @type t :: %__MODULE__{signal: String.t(), created_at: Time.t()}
+  alias CryptoMonkey.{Signals, Signals.Signal}
+
+  def new do
+    %Signal{}
+  end
 
   def new(signal) when is_map(signal) do
-    new_item = %__MODULE__{}
-    item = struct(new_item, k_v(signal))
+    # new_item = new()
+    # item = struct(new_item, k_v(signal))
+
+    item = k_v(signal)
 
     case item.algo do
       "" ->
@@ -24,23 +30,27 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
         {:error, item}
 
       _ ->
-        item = %{item | recognized_signal: true, received_signal: signal}
+        item =
+          item
+          |> Map.put(:recognized_signal, true)
+          |> Map.put(:received_signal, signal)
+
+        {:ok, signal} = Signals.create_signal(item)
+
         info("New Signal Map received")
-        inspect(item)
-        {:ok, item}
+
+        {:ok, signal}
     end
   end
 
   def new(signal) when is_bitstring(signal) do
-    new_item = %__MODULE__{}
-
     case import_signal(signal) do
       {:ok, signal} ->
         info("New Signal String received")
 
         item =
           struct(
-            new_item,
+            new(),
             Map.new(signal, fn {k, v} ->
               {k, String.upcase(v)}
             end)
@@ -49,7 +59,7 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
         {:ok, %{item | recognized_signal: true}}
 
       {:ok, signal, :partial} ->
-        item = struct(new_item, signal)
+        item = struct(new(), signal)
         warn("String Signal with unknown Values found!")
         {:ok, item}
     end

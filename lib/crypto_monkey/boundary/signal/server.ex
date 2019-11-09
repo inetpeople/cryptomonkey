@@ -25,6 +25,7 @@ defmodule CryptoMonkey.Boundary.Signal.Server do
   @impl true
   def handle_cast({:new_signal, signal}, state) do
     {:ok, signal} = Item.new(signal)
+
     {:noreply, [signal | state]}
   end
 
