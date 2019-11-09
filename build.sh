@@ -12,4 +12,8 @@ npm run deploy --prefix ./assets
 mix phx.digest
 
 # Build the release and overwrite the existing release directory
+rm -rf "_build"
 MIX_ENV=prod mix release --overwrite
+
+# for auto DB migration upon deploy
+MIX_ENV=prod mix ecto.migrate
