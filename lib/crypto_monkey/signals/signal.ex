@@ -30,7 +30,6 @@ defmodule CryptoMonkey.Signals.Signal do
 
     signal
     |> cast(attrs, allowed_fields)
-
-    # |> validate_required([:algo])
+    |> validate_required([:algo])
   end
 end

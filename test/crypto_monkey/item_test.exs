@@ -1,5 +1,6 @@
 defmodule CryptoMonkey.Boundary.Signal.ItemTest do
-  use ExUnit.Case, async: true
+  # use ExUnit.Case, async: true
+  use CryptoMonkey.DataCase
   alias CryptoMonkey.Boundary.Signal.{Item}
 
   def assert_item(item, type, expected) do
@@ -26,7 +27,7 @@ defmodule CryptoMonkey.Boundary.Signal.ItemTest do
     end
 
     test "items can be created when signal is a String" do
-      signal = "Btci ETHUSD Kraken Buy 5m none"
+      signal = "BTCi ETHUSD Kraken Buy 5m none"
 
       Item.new(signal)
       |> assert_item(:algo, "BTCI")
