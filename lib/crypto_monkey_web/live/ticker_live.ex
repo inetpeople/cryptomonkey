@@ -92,12 +92,25 @@ defmodule CryptoMonkeyWeb.TickerLive do
     <%= k %>
     <%= v %>
     <% end %>
+
+    <table>
+    <tr>
+    <%= for signal <- @signals do %>
+    <td><%= signal.algo %></td>
+    <td><%= signal.ticker %></td>
+    <td><%= signal.exchange %></td>
+    <td><%= signal.signal_type %></td>
+    <td><%= signal.chart_timeframe %></td>
+    </tr>
+    <% end %>
+    </table>
     </div>
     """
   end
 
   def new do
     %{
+      signals: [],
       # pi_ethusd: %{product_id: "PI_ETHUSD", markPrice: "loading", volume: "loading..."},
       # pi_xbtusd: %{product_id: "PI_XBTUSD", markPrice: "loading", volume: "loading..."},
       subscribed_tickers: ["PI_ETHUSD", "PI_XBTUSD"],
@@ -138,6 +151,9 @@ defmodule CryptoMonkeyWeb.TickerLive do
     product_ids = state.subscribed_tickers
     Kraken.subscribe_channels(Kraken, product_ids)
     Kraken.get_open_positions(Kraken)
+
+    signals = CryptoMonkey.Signals.list_signals()
+
     # Kraken.get_account_balances_and_margins(Kraken)
     # Kraken.get_open_orders_verbose(Kraken)
     # Kraken.get_open_orders(Kraken)
@@ -146,6 +162,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
       :ok = CryptoMonkeyWeb.Endpoint.subscribe("krakenx_futures")
     end
 
+    state = %{state | signals: signals}
     {:ok, assign(socket, state)}
   end
 
