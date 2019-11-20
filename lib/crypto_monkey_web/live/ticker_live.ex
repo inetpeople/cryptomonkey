@@ -154,7 +154,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
     Kraken.subscribe_channels(Kraken, product_ids)
     Kraken.get_open_positions(Kraken)
 
-    signals = CryptoMonkey.Signals.list_signals()
+    signals = CryptoMonkey.Signals.list_signals_by_latest()
 
     # Kraken.get_account_balances_and_margins(Kraken)
     # Kraken.get_open_orders_verbose(Kraken)
