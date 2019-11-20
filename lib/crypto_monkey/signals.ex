@@ -21,6 +21,12 @@ defmodule CryptoMonkey.Signals do
     Repo.all(Signal)
   end
 
+  def list_signals_by_latest do
+    Signal
+    |> reverse_order()
+    |> Repo.all
+  end
+
   @doc """
   Gets a single signal.
 
