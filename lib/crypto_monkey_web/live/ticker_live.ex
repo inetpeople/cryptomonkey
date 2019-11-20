@@ -100,7 +100,9 @@ defmodule CryptoMonkeyWeb.TickerLive do
     <td><%= signal.ticker %></td>
     <td><%= signal.exchange %></td>
     <td><%= signal.signal_type %></td>
+    <td><%= signal.signal_price %></td>
     <td><%= signal.chart_timeframe %></td>
+    <td><%= signal.created_at %></td>
     </tr>
     <% end %>
     </table>
