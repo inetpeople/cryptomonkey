@@ -34,10 +34,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
   def render(assigns) do
     ~L"""
     <div class="container">
-    <hr>
-
-
-    <table>
+    <table class="table">
     <thead>
     <tr>
       <th>Ticker</th>
@@ -49,6 +46,17 @@ defmodule CryptoMonkeyWeb.TickerLive do
       <th>Volume</th>
     </tr>
     </thead>
+      <tfoot>
+    <tr>
+      <th><abbr title="Position">Pos</abbr></th>
+      <th>Team</th>
+      <th><abbr title="Played">Pld</abbr></th>
+      <th><abbr title="Won">W</abbr></th>
+      <th><abbr title="Drawn">D</abbr></th>
+      <th><abbr title="Lost">L</abbr></th>
+      <th><abbr title="Goals for">GF</abbr></th>
+    </tr>
+  </tfoot>
     </tbody>
     <%= for {_k,v} <- @tickers do %>
     <tr>
@@ -64,19 +72,15 @@ defmodule CryptoMonkeyWeb.TickerLive do
     </tbody>
     </table>
     <hr>
-    Heartbeat Time: <%= @heartbeat.time %>
-
-    <hr>
     <%= for account <- @account_balances_and_margins do %>
     <%= account.account %>
-
     <% end %>
-
+    <hr>
     <%= for {k,v} <- @open_positions do %>
     <%= k %>
     <%= v %>
     <% end %>
-
+    <hr>
     <%= for {k,v} <- @open_orders_verbose_snapshot do %>
     <%= k %>
     <%= v %>
@@ -97,15 +101,15 @@ defmodule CryptoMonkeyWeb.TickerLive do
     <%= v %>
     <% end %>
 
-    <table>
+    <table class="table">
     <thead>
     <tr>
       <th>Algo</th>
       <th>Pair</th>
       <th>Exchange</th>
-      <th>Signal Type</th>
-      <th>Signal Price</th>
-      <th>Chart Time Frame</th>
+      <th>Signal</th>
+      <th><abbr title="Signal Price">Price</abbr></th>
+      <th><abbr title="Chart Time Frame">TF</abbr></th>
       <th>first</th>
       <th>last update</th>
       <th>Counts</th>
