@@ -57,6 +57,7 @@ defmodule CryptoMonkey.MixProject do
       # {:kraken_x, path: "../kraken_x"},
       {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"},
       # {:ex_money, "~> 4.0"},
+      # {:phoenix_html_simplified_helpers, "~> 2.1"}
       # {:binance, "~> 0.7.1"},
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false}
@@ -64,6 +65,8 @@ defmodule CryptoMonkey.MixProject do
       # {:deribit, "~> 0.2.0"},
       # {:ccxtex, "~> 0.4.3"},
       # {:ex_okex, "~> 0.2.0"}
+      # IRC
+      # {:exirc, "~> 1.1"}
     ]
   end
 
@@ -75,7 +78,8 @@ defmodule CryptoMonkey.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.seed": ["run priv/repo/seeds.#{Mix.env()}.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "ecto.seed"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]

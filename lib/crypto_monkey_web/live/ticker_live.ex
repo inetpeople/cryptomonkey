@@ -38,15 +38,18 @@ defmodule CryptoMonkeyWeb.TickerLive do
 
 
     <table>
+    <thead>
     <tr>
-      <td>Ticker</td>
-      <td>Mark Price</td>
-      <td>Ask Price</td>
-      <td>Ask Size</td>
-      <td>Bid Price</td>
-      <td>Bid Size</td>
-      <td>Volume</td>
+      <th>Ticker</th>
+      <th>Mark Price</th>
+      <th>Ask Price</th>
+      <th>Ask Size</th>
+      <th>Bid Price</th>
+      <th>Bid Size</th>
+      <th>Volume</th>
     </tr>
+    </thead>
+    </tbody>
     <%= for {_k,v} <- @tickers do %>
     <tr>
       <td><%= v.product_id %></td>
@@ -58,6 +61,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
       <td><%= v.volume %></td>
     </tr>
     <% end %>
+    </tbody>
     </table>
     <hr>
     Heartbeat Time: <%= @heartbeat.time %>
@@ -94,17 +98,36 @@ defmodule CryptoMonkeyWeb.TickerLive do
     <% end %>
 
     <table>
+    <thead>
     <tr>
+      <th>Algo</th>
+      <th>Pair</th>
+      <th>Exchange</th>
+      <th>Signal Type</th>
+      <th>Signal Price</th>
+      <th>Chart Time Frame</th>
+      <th>first</th>
+      <th>last update</th>
+      <th>Counts</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
     <%= for signal <- @signals do %>
-    <td><%= signal.algo %></td>
-    <td><%= signal.ticker %></td>
-    <td><%= signal.exchange %></td>
-    <td><%= signal.signal_type %></td>
-    <td><%= signal.signal_price %></td>
-    <td><%= signal.chart_timeframe %></td>
-    <td><%= signal.inserted_at %></td>
+    <tr>
+      <td><%= signal.algo %></td>
+      <td><%= signal.ticker %></td>
+      <td><%= signal.exchange %></td>
+      <td><%= signal.signal_type %></td>
+      <td><%= signal.signal_price %></td>
+      <td><%= signal.chart_timeframe %></td>
+      <td><%= signal.inserted_at %></td>
+      <td><%= signal.updated_at %></td>
+      <td>1++</td>
+      <td>active</td>
     </tr>
     <% end %>
+    </tbody>
     </table>
     </div>
     """
@@ -245,5 +268,9 @@ defmodule CryptoMonkeyWeb.TickerLive do
 
   defp utc_time(time) do
     DateTime.from_unix!(time, :millisecond)
+  end
+
+  def beautiful_date(%{year: year, month: month}) do
+    "#{year}-#{month}..."
   end
 end

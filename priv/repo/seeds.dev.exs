@@ -4,16 +4,18 @@ signals = [
   %{
     algo: "Test1-Algo",
     ticker: "BTCUSD",
-    exchange: "",
+    exchange: "KRAKEN",
     signal_type: "BUY",
+    signal_price: 8005,
     chart_timeframe: "4H",
     recognized_signal: true
   },
   %{
     algo: "Test1-Algo",
     ticker: "BTCUSD",
-    exchange: "",
+    exchange: "KRAKEN",
     signal_type: "SELL",
+    signal_price: 19000,
     chart_timeframe: "4H",
     recognized_signal: true
   },
