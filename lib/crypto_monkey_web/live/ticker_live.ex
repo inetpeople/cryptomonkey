@@ -30,6 +30,8 @@ defmodule CryptoMonkeyWeb.TickerLive do
   # </tr>
   # </tbody>
   # </table>
+
+
   @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
     ~L"""
@@ -178,10 +180,15 @@ defmodule CryptoMonkeyWeb.TickerLive do
   def mount(_session, socket) do
     state = new()
     product_ids = state.subscribed_tickers
+
+    #Kraken
     Kraken.subscribe_channels(Kraken, product_ids)
     Kraken.get_open_positions(Kraken)
 
-    signals = CryptoMonkey.Signals.list_signals_by_latest()
+    # Signals
+    :ok = CryptoMonkey.Signals.subscribe
+    signals = CryptoMonkey.Signals.list_last_5_signals()
+
 
     # Kraken.get_account_balances_and_margins(Kraken)
     # Kraken.get_open_orders_verbose(Kraken)
@@ -202,6 +209,7 @@ defmodule CryptoMonkeyWeb.TickerLive do
     new_tickers = socket.assigns.tickers |> Map.replace!(atom_key, msg)
     {:noreply, assign(socket, :tickers, new_tickers)}
   end
+
 
   def handle_info(
         %{topic: "krakenx_futures", event: "subscribed_tickers", payload: payload},
@@ -259,6 +267,13 @@ defmodule CryptoMonkeyWeb.TickerLive do
   def handle_info(%{topic: "krakenx_futures", event: "error", payload: payload}, socket) do
     error = map_to_atom(payload)
     {:noreply, assign(socket, :error, error)}
+  end
+
+
+  def handle_info(%{topic: "signals", event: "new_signal", payload: payload}, socket) do
+
+   new_signal = List.insert_at(socket.assigns.signals, 0, payload) |> inspect
+   {:noreply, assign(socket, :signals, new_signal)}
   end
 
   ######

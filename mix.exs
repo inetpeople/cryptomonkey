@@ -51,7 +51,7 @@ defmodule CryptoMonkey.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:websockex, "~> 0.4.2"},
-      {:phoenix_live_view, "~> 0.3.0"},
+      {:phoenix_live_view, "~> 0.4.1"},
       # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
       # {:kraken_x, path: "../kraken_x"},
@@ -66,7 +66,9 @@ defmodule CryptoMonkey.MixProject do
       # {:ccxtex, "~> 0.4.3"},
       # {:ex_okex, "~> 0.2.0"}
       # IRC
-      # {:exirc, "~> 1.1"}
+      # {:exirc, "~> 1.1"},
+      # https://stackoverflow.com/questions/55063639/automatically-take-snapshots-of-tradingview-charts-and-save-in-google-docs
+      # {:hound, "~> 1.1"}
     ]
   end
 

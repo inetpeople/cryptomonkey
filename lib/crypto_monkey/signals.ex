@@ -8,6 +8,8 @@ defmodule CryptoMonkey.Signals do
 
   alias CryptoMonkey.Signals.Signal
 
+  @topic "signals"
+
   @doc """
   Returns the list of signals.
 
@@ -26,6 +28,21 @@ defmodule CryptoMonkey.Signals do
     |> reverse_order()
     |> Repo.all
   end
+
+
+  def list_last_5_signals do
+    list_signals_by_latest()
+    |> Enum.take(5)
+  end
+
+  @doc """
+  Subscribe to updates to the user list.
+  """
+  @spec subscribe :: :ok | {:error, term()}
+  def subscribe() do
+    CryptoMonkeyWeb.Endpoint.subscribe(@topic)
+  end
+
 
   @doc """
   Gets a single signal.
@@ -56,9 +73,13 @@ defmodule CryptoMonkey.Signals do
 
   """
   def create_signal(attrs \\ %{}) do
-    %Signal{}
+    {:ok, signal} = %Signal{}
     |> Signal.changeset(attrs)
     |> Repo.insert()
+
+    CryptoMonkeyWeb.Endpoint.broadcast!(@topic, "new_signal", signal)
+
+    {:ok, signal}
   end
 
   @doc """
