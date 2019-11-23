@@ -3,140 +3,10 @@ defmodule CryptoMonkeyWeb.TickerLive do
   require Logger
 
   # TODO: https://adamdelong.com/elixir-dynamic-maps/
+  alias CryptoMonkeyWeb.TickerView
 
-  # <hr>
-
-  # <table>
-  # <thead>
-  # <tr>
-  #   <th>Pair:</th>
-  #   <%= for {k,_v} <- @pi_ethusd do %>
-  #     <th><%= k %></th>
-  #   <% end %>
-  # </tr>
-  # </thead>
-  # <tbody>
-  # <tr>
-  #   <td><%= @pi_ethusd.product_id %></td>
-  #   <%= for {_k,v} <- @pi_ethusd do %>
-  #   <td><%= v %></td>
-  # <% end %>
-  # </tr>
-  # <tr>
-  #   <td><%= @pi_xbtusd.product_id %></td>
-  #   <%= for {_k,v} <- @pi_xbtusd do %>
-  #   <td><%= v %></td>
-  # <% end %>
-  # </tr>
-  # </tbody>
-  # </table>
-
-
-  @spec render(any) :: Phoenix.LiveView.Rendered.t()
   def render(assigns) do
-    ~L"""
-    <div class="container">
-    <table class="table">
-    <thead>
-    <tr>
-      <th>Ticker</th>
-      <th>Mark Price</th>
-      <th>Ask Price</th>
-      <th>Ask Size</th>
-      <th>Bid Price</th>
-      <th>Bid Size</th>
-      <th>Volume</th>
-    </tr>
-    </thead>
-      <tfoot>
-    <tr>
-      <th><abbr title="Position">Pos</abbr></th>
-      <th>Team</th>
-      <th><abbr title="Played">Pld</abbr></th>
-      <th><abbr title="Won">W</abbr></th>
-      <th><abbr title="Drawn">D</abbr></th>
-      <th><abbr title="Lost">L</abbr></th>
-      <th><abbr title="Goals for">GF</abbr></th>
-    </tr>
-  </tfoot>
-    </tbody>
-    <%= for {_k,v} <- @tickers do %>
-    <tr>
-      <td><%= v.product_id %></td>
-      <td><%= v.markPrice %></td>
-      <td><%= v.ask %></td>
-      <td><%= v.ask_size %></td>
-      <td><%= v.bid %></td>
-      <td><%= v.bid_size %></td>
-      <td><%= v.volume %></td>
-    </tr>
-    <% end %>
-    </tbody>
-    </table>
-    <hr>
-    <%= for account <- @account_balances_and_margins do %>
-    <%= account.account %>
-    <% end %>
-    <hr>
-    <%= for {k,v} <- @open_positions do %>
-    <%= k %>
-    <%= v %>
-    <% end %>
-    <hr>
-    <%= for {k,v} <- @open_orders_verbose_snapshot do %>
-    <%= k %>
-    <%= v %>
-    <% end %>
-
-    <%= for {k,v} <- @open_orders_snapshot do %>
-    <%= k %>
-    <%= v %>
-    <% end %>
-
-    <%= for {k,v} <- @unsubscribed do %>
-    <%= k %>
-    <%= v %>
-    <% end %>
-
-    <%= for {k,v} <- @error do %>
-    <%= k %>
-    <%= v %>
-    <% end %>
-
-    <table class="table">
-    <thead>
-    <tr>
-      <th>Algo</th>
-      <th>Pair</th>
-      <th>Exchange</th>
-      <th>Signal</th>
-      <th><abbr title="Signal Price">Price</abbr></th>
-      <th><abbr title="Chart Time Frame">TF</abbr></th>
-      <th>first</th>
-      <th>last update</th>
-      <th>Counts</th>
-      <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    <%= for signal <- @signals do %>
-    <tr>
-      <td><%= signal.algo %></td>
-      <td><%= signal.ticker %></td>
-      <td><%= signal.exchange %></td>
-      <td><%= signal.signal_type %></td>
-      <td><%= signal.signal_price %></td>
-      <td><%= signal.chart_timeframe %></td>
-      <td><%= signal.inserted_at %></td>
-      <td><%= signal.updated_at %></td>
-      <td>1++</td>
-      <td>active</td>
-    </tr>
-    <% end %>
-    </tbody>
-    </table>
-    </div>
-    """
+    TickerView.render("index.html", assigns)
   end
 
   def new do
@@ -181,15 +51,14 @@ defmodule CryptoMonkeyWeb.TickerLive do
     state = new()
     product_ids = state.subscribed_tickers
 
-    #Kraken
+    # Kraken
     Kraken.subscribe_channels(Kraken, product_ids)
     Kraken.get_open_positions(Kraken)
 
     # Signals
-    :ok = CryptoMonkey.Signals.subscribe
+    # :ok = CryptoMonkey.Signals.subscribe()
     signals = CryptoMonkey.Signals.list_last_5_signals()
-
-
+    CryptoMonkeyWeb.Endpoint.subscribe("signals")
     # Kraken.get_account_balances_and_margins(Kraken)
     # Kraken.get_open_orders_verbose(Kraken)
     # Kraken.get_open_orders(Kraken)
@@ -209,7 +78,6 @@ defmodule CryptoMonkeyWeb.TickerLive do
     new_tickers = socket.assigns.tickers |> Map.replace!(atom_key, msg)
     {:noreply, assign(socket, :tickers, new_tickers)}
   end
-
 
   def handle_info(
         %{topic: "krakenx_futures", event: "subscribed_tickers", payload: payload},
@@ -269,11 +137,9 @@ defmodule CryptoMonkeyWeb.TickerLive do
     {:noreply, assign(socket, :error, error)}
   end
 
-
   def handle_info(%{topic: "signals", event: "new_signal", payload: payload}, socket) do
-
-   new_signal = List.insert_at(socket.assigns.signals, 0, payload) |> inspect
-   {:noreply, assign(socket, :signals, new_signal)}
+    new_signal = List.insert_at(socket.assigns.signals, 0, payload) |> Enum.take(5)
+    {:noreply, assign(socket, :signals, new_signal)}
   end
 
   ######
@@ -285,11 +151,11 @@ defmodule CryptoMonkeyWeb.TickerLive do
     end)
   end
 
-  defp utc_time(time) do
-    DateTime.from_unix!(time, :millisecond)
-  end
+  # defp utc_time(time) do
+  #   DateTime.from_unix!(time, :millisecond)
+  # end
 
-  def beautiful_date(%{year: year, month: month}) do
-    "#{year}-#{month}..."
-  end
+  # def beautiful_date(%{year: year, month: month}) do
+  #   "#{year}-#{month}..."
+  # end
 end

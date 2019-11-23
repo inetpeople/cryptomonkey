@@ -26,9 +26,8 @@ defmodule CryptoMonkey.Signals do
   def list_signals_by_latest do
     Signal
     |> reverse_order()
-    |> Repo.all
+    |> Repo.all()
   end
-
 
   def list_last_5_signals do
     list_signals_by_latest()
@@ -42,7 +41,6 @@ defmodule CryptoMonkey.Signals do
   def subscribe() do
     CryptoMonkeyWeb.Endpoint.subscribe(@topic)
   end
-
 
   @doc """
   Gets a single signal.
@@ -73,13 +71,16 @@ defmodule CryptoMonkey.Signals do
 
   """
   def create_signal(attrs \\ %{}) do
-    {:ok, signal} = %Signal{}
+    %Signal{}
     |> Signal.changeset(attrs)
     |> Repo.insert()
+    |> broadcast_change("new_signal")
+  end
 
-    CryptoMonkeyWeb.Endpoint.broadcast!(@topic, "new_signal", signal)
+  defp broadcast_change({:ok, result}, event) do
+    CryptoMonkeyWeb.Endpoint.broadcast(@topic, event, result)
 
-    {:ok, signal}
+    {:ok, result}
   end
 
   @doc """
