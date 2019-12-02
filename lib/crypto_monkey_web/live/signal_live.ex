@@ -2,6 +2,7 @@ defmodule CryptoMonkeyWeb.SignalLive do
   use Phoenix.LiveView
   require Logger
   alias CryptoMonkeyWeb.SignalView
+  alias CryptoMonkey.Signals
 
   def render(assigns) do
     SignalView.render("index.html", assigns)
@@ -12,8 +13,6 @@ defmodule CryptoMonkeyWeb.SignalLive do
       signals: []
     }
   end
-
-  alias CryptoMonkey.Signals
 
   def mount(_session, socket) do
     state = new()

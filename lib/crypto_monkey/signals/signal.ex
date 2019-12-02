@@ -32,4 +32,25 @@ defmodule CryptoMonkey.Signals.Signal do
     |> cast(attrs, allowed_fields)
     |> validate_required([:algo])
   end
+
+  def expected_map(algo \\ "", ctf \\ "", exh \\ "", type \\ "", ticker \\ "") do
+    %{
+      algo: algo,
+      chart_timeframe: ctf,
+      exchange: exh,
+      signal_price: "",
+      signal_type: type,
+      ticker: ticker
+    }
+    |> Jason.encode!()
+  end
+
+  # {
+  # "algo":"PSAR",
+  # "chart_timeframe":"4h",
+  # "exchange": "bitstamp",
+  # "signal_price":"",
+  # "signal_type":"buy",
+  # "ticker":"BTCUSD"
+  # }
 end

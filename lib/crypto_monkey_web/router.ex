@@ -22,6 +22,7 @@ defmodule CryptoMonkeyWeb.Router do
     pipe_through :browser
     live "/ticker", TickerLive, session: [:user_id]
     live "/signals", SignalLive, session: [:user_id]
+    live "/makerdao", MakerDaoLive, session: [:user_id]
 
     get "/", PageController, :index
   end

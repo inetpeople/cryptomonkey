@@ -62,21 +62,25 @@ defmodule CryptoMonkey.MixProject do
       #### Helpers
       # {:ex_money, "~> 4.0"},
       # {:phoenix_html_simplified_helpers, "~> 2.1"}
-
+      {:number, "~> 1.0.0"},
       #### Tests
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false},
 
       # {:exconstructor, "~> 1.1.0"},
 
+      ### Node
+      # {:nodejs, "~> 1.0"},
+
       #### Exchanges
       # {:deribit, "~> 0.2.0"},
       # {:ccxtex, "~> 0.4.3"},
+      # {:ccxtex, git: "https://github.com/inetpeople/ccxtex.git"},
       # {:ex_okex, "~> 0.2.0"}
       # {:ex_bitmex, "~> 0.2"}
       # {:binance, "~> 0.7.1"},
       # {:kraken_x, path: "../kraken_x"},
-      {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"},
+      {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"}
 
       # IRC
       # {:exirc, "~> 1.1"},
