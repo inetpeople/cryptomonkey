@@ -1,0 +1,51 @@
+    <div class="container">
+    <table class="table">
+    <thead>
+    <tr>
+      <th>ETH Price:</th>
+      <th>Total:</th>
+      <th><abbr title="DAI created.">Debt</abbr></th>
+      <th>Free Value:</th>
+      <th>ETH Sold:</th>
+      <th>ETH Bought:</th>
+      <th><abbr title="ETH Collateral">Collateral</abbr></th>
+      <th><abbr title="Ratio">Ratio</abbr></th>
+      <th>Liquidation Price:</th>
+      <th>Original amount ETH</th>
+      <th>Value:</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= for cdp <- @cdp_states do %>
+    <tr>
+      <td><%= cdp.eth_price %></td>
+      <td><%= format_currency cdp.total_value %></td>
+      <td><%= format_currency cdp.debt %></td>
+      <td><%= format_currency cdp.free_value %></td>
+      <td><%= format_number cdp.eth_sold %></td>
+      <td><%= format_number cdp.eth_bought %></td>
+      <td><%= format_number cdp.collateral_eth %></td>
+      <td><%= format_percentage cdp.collaterizations_ratio %></td>
+      <td><%= format_currency cdp.liquidation_price %></td>
+      <td><%= format_currency cdp.original_collateral_eth %></td>
+      <td><%= format_currency cdp.original_value %></td> 
+    </tr>
+    <% end %>
+    </tbody>
+    <tfooter>
+    <tr>
+      <th>ETH Price:</th>
+      <th>Total:</th>
+      <th><abbr title="DAI created.">Debt</abbr></th>
+      <th>Free Value:</th>
+      <th>ETH Sold:</th>
+      <th>ETH Bought:</th>
+      <th><abbr title="ETH Collateral">Collateral</abbr></th>
+      <th><abbr title="Ratio">Ratio</abbr></th>
+      <th>Liquidation Price:</th>
+      <th>Original amount ETH</th>
+      <th>Value:</th>
+    </tr>
+    </tfooter>
+    </table>
+    </div>

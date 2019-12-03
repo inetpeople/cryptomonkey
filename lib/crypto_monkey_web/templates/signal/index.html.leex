@@ -1,0 +1,34 @@
+    <div class="container">
+    <table class="table">
+    <thead>
+    <tr>
+      <th>Algo</th>
+      <th>Pair</th>
+      <th>Exchange</th>
+      <th>Signal</th>
+      <th><abbr title="Signal Price">Price</abbr></th>
+      <th><abbr title="Chart Time Frame">TF</abbr></th>
+      <th>first</th>
+      <th>last update</th>
+      <th>Counts</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= for signal <- @signals do %>
+    <tr>
+      <td><%= signal.algo %></td>
+      <td><%= signal.ticker %></td>
+      <td><%= signal.exchange %></td>
+      <td><%= signal.signal_type %></td>
+      <td><%= signal.signal_price %></td>
+      <td><%= signal.chart_timeframe %></td>
+      <td><%= signal.inserted_at %></td>
+      <td><%= signal.updated_at %></td>
+      <td>1++</td>
+      <td>active</td>
+    </tr>
+    <% end %>
+    </tbody>
+    </table>
+    </div>

@@ -1,0 +1,102 @@
+
+    <div class="container">
+    <table class="table">
+    <thead>
+    <tr>
+      <th>Ticker</th>
+      <th>Mark Price</th>
+      <th>Ask Price</th>
+      <th>Ask Size</th>
+      <th>Bid Price</th>
+      <th>Bid Size</th>
+      <th>Volume</th>
+    </tr>
+    </thead>
+      <tfoot>
+    <tr>
+      <th><abbr title="Position">Pos</abbr></th>
+      <th>Team</th>
+      <th><abbr title="Played">Pld</abbr></th>
+      <th><abbr title="Won">W</abbr></th>
+      <th><abbr title="Drawn">D</abbr></th>
+      <th><abbr title="Lost">L</abbr></th>
+      <th><abbr title="Goals for">GF</abbr></th>
+    </tr>
+    </tfoot>
+    </tbody>
+    <%= for {_k,v} <- @tickers do %>
+    <tr>
+      <td><%= v.product_id %></td>
+      <td><%= v.markPrice %></td>
+      <td><%= v.ask %></td>
+      <td><%= v.ask_size %></td>
+      <td><%= v.bid %></td>
+      <td><%= v.bid_size %></td>
+      <td><%= v.volume %></td>
+    </tr>
+    <% end %>
+    </tbody>
+    </table>
+    <hr>
+    <%= for account <- @account_balances_and_margins do %>
+    <%= account.account %>
+    <% end %>
+    <hr>
+    <%= for {k,v} <- @open_positions do %>
+    <%= k %>
+    <%= v %>
+    <% end %>
+    <hr>
+    <%= for {k,v} <- @open_orders_verbose_snapshot do %>
+    <%= k %>
+    <%= v %>
+    <% end %>
+
+    <%= for {k,v} <- @open_orders_snapshot do %>
+    <%= k %>
+    <%= v %>
+    <% end %>
+
+    <%= for {k,v} <- @unsubscribed do %>
+    <%= k %>
+    <%= v %>
+    <% end %>
+
+    <%= for {k,v} <- @error do %>
+    <%= k %>
+    <%= v %>
+    <% end %>
+
+    <table class="table">
+    <thead>
+    <tr>
+      <th>Algo</th>
+      <th>Pair</th>
+      <th>Exchange</th>
+      <th>Signal</th>
+      <th><abbr title="Signal Price">Price</abbr></th>
+      <th><abbr title="Chart Time Frame">TF</abbr></th>
+      <th>first</th>
+      <th>last update</th>
+      <th>Counts</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <%= for signal <- @signals do %>
+    <tr>
+      <td><%= signal.algo %></td>
+      <td><%= signal.ticker %></td>
+      <td><%= signal.exchange %></td>
+      <td><%= signal.signal_type %></td>
+      <td><%= signal.signal_price %></td>
+      <td><%= signal.chart_timeframe %></td>
+      <td><%= signal.inserted_at %></td>
+      <td><%= signal.updated_at %></td>
+      <td>1++</td>
+      <td>active</td>
+    </tr>
+    <% end %>
+    </tbody>
+    </table>
+    </div>

@@ -50,20 +50,43 @@ defmodule CryptoMonkey.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
+
+      ##### RealTime
       {:websockex, "~> 0.4.2"},
-      {:phoenix_live_view, "~> 0.3.0"},
+      {:phoenix_live_view, "~> 0.4.1"},
+
+      ##### Http
       # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
-      # {:kraken_x, path: "../kraken_x"},
-      {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"},
+
+      #### Helpers
       # {:ex_money, "~> 4.0"},
-      # {:binance, "~> 0.7.1"},
+      # {:phoenix_html_simplified_helpers, "~> 2.1"}
+      {:number, "~> 1.0.0"},
+      #### Tests
       # {:excoveralls, "~> 0.10", only: :test},
-      {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false}
+      {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false},
+
       # {:exconstructor, "~> 1.1.0"},
+
+      ### Node
+      # {:nodejs, "~> 1.0"},
+
+      #### Exchanges
       # {:deribit, "~> 0.2.0"},
       # {:ccxtex, "~> 0.4.3"},
+      # {:ccxtex, git: "https://github.com/inetpeople/ccxtex.git"},
       # {:ex_okex, "~> 0.2.0"}
+      # {:ex_bitmex, "~> 0.2"}
+      # {:binance, "~> 0.7.1"},
+      # {:kraken_x, path: "../kraken_x"},
+      {:kraken_x, git: "https://github.com/inetpeople/KrakenX.git"}
+
+      # IRC
+      # {:exirc, "~> 1.1"},
+
+      # https://stackoverflow.com/questions/55063639/automatically-take-snapshots-of-tradingview-charts-and-save-in-google-docs
+      # {:hound, "~> 1.1"}
     ]
   end
 
@@ -75,7 +98,8 @@ defmodule CryptoMonkey.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.seed": ["run priv/repo/seeds.#{Mix.env()}.exs"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "ecto.seed"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
