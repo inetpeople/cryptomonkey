@@ -63,6 +63,9 @@ defmodule CryptoMonkey.MixProject do
       # {:ex_money, "~> 4.0"},
       # {:phoenix_html_simplified_helpers, "~> 2.1"}
       {:number, "~> 1.0.0"},
+      {:csv, "~> 2.3"},
+      {:decimal, "~> 1.0"},
+
       #### Tests
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false},

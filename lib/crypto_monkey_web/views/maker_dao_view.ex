@@ -7,7 +7,7 @@ defmodule CryptoMonkeyWeb.MakerDaoView do
   end
 
   def format_number(number) do
-    round(number)
+    Number.Currency.number_to_currency(number, unit: "Ξ ")
   end
 
   def format_percentage(percentage) do

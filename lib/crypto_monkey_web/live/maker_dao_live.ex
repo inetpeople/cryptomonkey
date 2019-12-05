@@ -11,15 +11,15 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
 
   def new do
     %{
-      collateral_eth: 740,
-      eth_price: 154,
-      debt: 32000,
+      collateral_eth: 720.0 |> Decimal.from_float(),
+      eth_price: 140.0 |> Decimal.from_float(),
+      debt: 32000.0 |> Decimal.from_float(),
       cdp_states: [
         %{
-          eth_price: 0,
-          total_value: 0,
+          eth_price: 140,
+          total_value: 1,
           debt: 0,
-          free_value: 0,
+          free_value: 1,
           eth_sold: 0,
           eth_bought: 0,
           collateral_eth: 0,
@@ -35,10 +35,8 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
   def mount(_session, socket) do
     state = new()
     :ok = CryptoMonkeyWeb.Endpoint.subscribe(@topic)
-
-    MakerDao.repay_or_boost?(state.eth_price, state.debt, state.collateral_eth)
-
-    # play(state.eth_price)
+    play("eth_historical_prices_copy.csv")
+    # MakerDao.repay_or_boost?(state.eth_price, state.debt, state.collateral_eth)
 
     {:ok, assign(socket, state)}
   end
@@ -48,16 +46,21 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
 
     new_entry = %{
       eth_price: payload.eth_price,
-      total_value: payload.eth_price * payload.new_collateral_eth,
+      total_value: Decimal.mult(payload.eth_price, payload.new_collateral_eth),
       debt: payload.max_debt,
-      free_value: payload.eth_price * payload.new_collateral_eth - payload.max_debt,
+      free_value:
+        Decimal.sub(Decimal.mult(payload.eth_price, payload.new_collateral_eth), payload.max_debt),
       eth_sold: 0,
       eth_bought: payload.eth_to_buy,
       collateral_eth: payload.new_collateral_eth,
-      collaterizations_ratio: payload.collaterizations_ratio * 100,
+      collaterizations_ratio: Decimal.mult(payload.collaterizations_ratio, 100),
       liquidation_price: payload.liquidation_price,
       original_collateral_eth: socket.assigns.collateral_eth,
-      original_value: socket.assigns.collateral_eth * payload.eth_price
+      original_value:
+        Decimal.sub(
+          Decimal.mult(socket.assigns.collateral_eth, payload.eth_price),
+          socket.assigns.debt
+        )
     }
 
     new_state = List.insert_at(socket.assigns.cdp_states, 0, new_entry)
@@ -70,16 +73,17 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
 
     new_entry = %{
       eth_price: payload.eth_price,
-      total_value: round(payload.eth_price * payload.new_collateral_eth),
+      total_value: Decimal.mult(payload.eth_price, payload.new_collateral_eth),
       debt: payload.max_debt,
-      free_value: payload.eth_price * payload.new_collateral_eth - payload.max_debt,
+      free_value:
+        Decimal.sub(Decimal.mult(payload.eth_price, payload.new_collateral_eth), payload.max_debt),
       eth_sold: payload.eth_to_sell,
       eth_bought: 0,
       collateral_eth: payload.new_collateral_eth,
-      collaterizations_ratio: payload.collaterizations_ratio * 100,
-      liquidation_price: round(payload.liquidation_price),
+      collaterizations_ratio: Decimal.mult(payload.collaterizations_ratio, 100),
+      liquidation_price: payload.liquidation_price,
       original_collateral_eth: socket.assigns.collateral_eth,
-      original_value: socket.assigns.collateral_eth * payload.eth_price
+      original_value: Decimal.mult(socket.assigns.collateral_eth, payload.eth_price)
     }
 
     new_state = List.insert_at(socket.assigns.cdp_states, 0, new_entry)
@@ -117,10 +121,12 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
     downtrend ++ uptrend
   end
 
-  def play(start_price) do
-    state = new()
+  def play(file) do
+    # price_samples = play_with_prices(start_price)
+    info("Play time")
 
-    price_samples = play_with_prices(start_price)
+    state = new()
+    price_samples = HistoricalPrices.get_data_from_csv_file(file)
 
     Enum.reduce(
       price_samples,
@@ -129,7 +135,8 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
         collateral_eth: state.collateral_eth
       },
       fn x, map ->
-        {:ok, map} = MakerDao.repay_or_boost?(x, map.debt, map.collateral_eth)
+        close = x.close
+        {:ok, map} = MakerDao.repay_or_boost?(close, map.debt, map.collateral_eth)
         map
       end
     )
