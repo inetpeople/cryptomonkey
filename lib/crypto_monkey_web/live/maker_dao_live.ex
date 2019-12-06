@@ -1,6 +1,6 @@
 defmodule CryptoMonkeyWeb.MakerDaoLive do
   use Phoenix.LiveView
-  import Logger, only: [info: 1, warn: 1]
+  import Logger, only: [info: 1]
   alias CryptoMonkey.MakerDao
   alias CryptoMonkeyWeb.MakerDaoView
   @topic "MakerDao"
@@ -11,11 +11,12 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
 
   def new do
     %{
-      collateral_eth: 720.0 |> Decimal.from_float(),
-      eth_price: 140.0 |> Decimal.from_float(),
-      debt: 32000.0 |> Decimal.from_float(),
+      collateral_eth: "720.0" |> Decimal.new(),
+      eth_price: "140.0" |> Decimal.new(),
+      debt: "32000.00" |> Decimal.new(),
       cdp_states: [
         %{
+          date: ~D[2999-12-31],
           eth_price: 140,
           total_value: 1,
           debt: 0,
@@ -45,6 +46,7 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
     # Logger.info("Boost CDP")
 
     new_entry = %{
+      date: payload.date,
       eth_price: payload.eth_price,
       total_value: Decimal.mult(payload.eth_price, payload.new_collateral_eth),
       debt: payload.max_debt,
@@ -72,6 +74,7 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
     # Logger.info("Repay CDP")
 
     new_entry = %{
+      date: payload.date,
       eth_price: payload.eth_price,
       total_value: Decimal.mult(payload.eth_price, payload.new_collateral_eth),
       debt: payload.max_debt,
@@ -91,35 +94,25 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
     {:noreply, assign(socket, :cdp_states, new_state)}
   end
 
-  def handle_info(%{topic: @topic, event: "neutral_cdp", payload: payload}, socket) do
-    # Logger.info("Nautral CDP")
+  # def handle_info(%{topic: @topic, event: "neutral_cdp", payload: payload}, socket) do
+  #   new_entry = %{
+  #     date: payload.date,
+  #     eth_price: round(payload.eth_price),
+  #     total_value: round(payload.eth_price * payload.collateral_eth),
+  #     debt: payload.max_debt,
+  #     free_value: payload.eth_price * payload.collateral_eth - payload.max_debt,
+  #     eth_sold: 0,
+  #     eth_bought: 0,
+  #     collateral_eth: payload.new_collateral_eth,
+  #     collaterizations_ratio: payload.collaterizations_ratio * 100,
+  #     liquidation_price: payload.liquidation_price,
+  #     original_collateral_eth: socket.assigns.collateral_eth,
+  #     original_value: socket.assigns.collateral_eth * payload.eth_price
+  #   }
 
-    new_entry = %{
-      eth_price: round(payload.eth_price),
-      total_value: round(payload.eth_price * payload.collateral_eth),
-      debt: payload.max_debt,
-      free_value: payload.eth_price * payload.collateral_eth - payload.max_debt,
-      eth_sold: 0,
-      eth_bought: 0,
-      collateral_eth: payload.new_collateral_eth,
-      collaterizations_ratio: payload.collaterizations_ratio * 100,
-      liquidation_price: payload.liquidation_price,
-      original_collateral_eth: socket.assigns.collateral_eth,
-      original_value: socket.assigns.collateral_eth * payload.eth_price
-    }
-
-    new_state = List.insert_at(socket.assigns.cdp_states, 0, new_entry)
-
-    {:noreply, assign(socket, :cdp_states, new_state)}
-  end
-
-  def play_with_prices(start_price) do
-    deepest_price = 120
-    highest_price = 6000
-    downtrend = Enum.to_list(start_price..deepest_price)
-    uptrend = Enum.to_list(deepest_price..highest_price)
-    downtrend ++ uptrend
-  end
+  #   new_state = List.insert_at(socket.assigns.cdp_states, 0, new_entry)
+  #   {:noreply, assign(socket, :cdp_states, new_state)}
+  # end
 
   def play(file) do
     # price_samples = play_with_prices(start_price)
@@ -134,9 +127,8 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
         debt: state.debt,
         collateral_eth: state.collateral_eth
       },
-      fn x, map ->
-        close = x.close
-        {:ok, map} = MakerDao.repay_or_boost?(close, map.debt, map.collateral_eth)
+      fn x, data ->
+        {:ok, map} = MakerDao.repay_or_boost?(x, data.debt, data.collateral_eth)
         map
       end
     )

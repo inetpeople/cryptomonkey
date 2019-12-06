@@ -2,6 +2,7 @@
     <table class="table">
     <thead>
     <tr>
+      <th>Date</th>
       <th>Price</th>
       <th>Total in USD</th>
       <th><abbr title="DAI created.">Debt</abbr></th>
@@ -19,23 +20,25 @@
     <tbody>
     <%= for cdp <- @cdp_states do %>
     <tr>
-      <td><%= cdp.eth_price %></td>
+      <td><%= cdp.date %> </td>
+      <td><%= format_currency cdp.eth_price %></td>
       <td><%= format_currency cdp.total_value %></td>
       <td><%= format_currency cdp.debt %></td>
       <td><%= format_currency cdp.free_value %></td>
-      <td><%= format_number cdp.eth_sold %></td>
-      <td><%= format_number cdp.eth_bought %></td>
+      <td><%= format_ethereum cdp.eth_sold %></td>
+      <td><%= format_ethereum cdp.eth_bought %></td>
       <td><%= format_percentage cdp.collaterizations_ratio %></td>
       <td><%= format_currency cdp.liquidation_price %></td>
-      <td><%= format_number cdp.collateral_eth %></td>
-      <td><%= format_number(Decimal.div(cdp.free_value, cdp.eth_price)) %></td>
-      <td><%= format_currency cdp.original_collateral_eth %></td>
+      <td><%= format_ethereum cdp.collateral_eth %></td>
+      <td><%= format_ethereum(Decimal.div(cdp.free_value, cdp.eth_price)) %></td>
+      <td><%= format_ethereum cdp.original_collateral_eth %></td>
       <td><%= format_currency cdp.original_value %></td>
     </tr>
     <% end %>
     </tbody>
     <tfooter>
     <tr>
+      <th>Date</th>
       <th>Price</th>
       <th>Total in USD</th>
       <th><abbr title="DAI created.">Debt</abbr></th>

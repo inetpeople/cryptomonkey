@@ -6,8 +6,8 @@ defmodule CryptoMonkeyWeb.MakerDaoView do
     Number.Currency.number_to_currency(usd)
   end
 
-  def format_number(number) do
-    Number.Currency.number_to_currency(number, unit: "Ξ ")
+  def format_ethereum(number) do
+    Number.Currency.number_to_currency(number, unit: " Ξ ")
   end
 
   def format_percentage(percentage) do

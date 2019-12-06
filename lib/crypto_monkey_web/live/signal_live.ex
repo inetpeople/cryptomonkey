@@ -18,8 +18,8 @@ defmodule CryptoMonkeyWeb.SignalLive do
     state = new()
 
     # Signals
-    signals = CryptoMonkey.Signals.list_signals_by_latest()
-    :ok = CryptoMonkey.Signals.subscribe()
+    signals = Signals.list_signals_by_latest()
+    :ok = Signals.subscribe()
     state = %{state | signals: signals}
 
     {:ok, assign(socket, state)}
