@@ -24,6 +24,7 @@ defmodule CryptoMonkey.Boundary.Signal.ItemTest do
       Item.new(signal)
       |> assert_item(:recognized_signal, false)
       |> assert_item(:received_signal, signal)
+      |> assert_item(:algo, "???")
     end
 
     test "items can be created when signal is a String" do

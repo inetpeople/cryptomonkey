@@ -1,29 +1,7 @@
-alias CryptoMonkey.Signals
+alias CryptoMonkey.{Repo, Signals}
 
-signals = [
-  %{
-    algo: "Test1-Algo",
-    ticker: "BTCUSD",
-    exchange: "KRAKEN",
-    signal_type: "BUY",
-    signal_price: 8005,
-    chart_timeframe: "4H",
-    recognized_signal: true
-  },
-  %{
-    algo: "Test1-Algo",
-    ticker: "BTCUSD",
-    exchange: "KRAKEN",
-    signal_type: "SELL",
-    signal_price: 19000,
-    chart_timeframe: "4H",
-    recognized_signal: true
-  },
+signals = File.read!("./priv/data/dev/signals.txt") |> :erlang.binary_to_term()
 
-]
-
-
-
-Enum.each(signals, fn(data) ->
-  Signals.create_signal(data)
+Enum.each(signals, fn data ->
+  Repo.insert(data)
 end)

@@ -11,7 +11,11 @@ defmodule CryptoMonkey.Signals.Signal do
     field :chart_timeframe, :string
     field :signal_price, :decimal
     field :recognized_signal, :boolean, default: false
+    field :closed_at, :naive_datetime
+    field :published_at, :naive_datetime
+    field :confirmed_at, :naive_datetime
 
+    belongs_to :closing_signal, __MODULE__
     timestamps()
   end
 
@@ -25,7 +29,11 @@ defmodule CryptoMonkey.Signals.Signal do
       :signal_type,
       :chart_timeframe,
       :signal_price,
-      :recognized_signal
+      :recognized_signal,
+      :closed_at,
+      :published_at,
+      :confirmed_at,
+      :closing_signal_id
     ]
 
     signal
@@ -33,17 +41,17 @@ defmodule CryptoMonkey.Signals.Signal do
     |> validate_required([:algo])
   end
 
-  def expected_map(algo \\ "", ctf \\ "", exh \\ "", type \\ "", ticker \\ "") do
-    %{
-      algo: algo,
-      chart_timeframe: ctf,
-      exchange: exh,
-      signal_price: "",
-      signal_type: type,
-      ticker: ticker
-    }
-    |> Jason.encode!()
-  end
+  # def expected_map(algo \\ "", ctf \\ "", exh \\ "", type \\ "", ticker \\ "") do
+  #   %{
+  #     algo: algo,
+  #     chart_timeframe: ctf,
+  #     exchange: exh,
+  #     signal_price: "",
+  #     signal_type: type,
+  #     ticker: ticker
+  #   }
+  #   |> Jason.encode!()
+  # end
 
   # {
   # "algo":"PSAR",

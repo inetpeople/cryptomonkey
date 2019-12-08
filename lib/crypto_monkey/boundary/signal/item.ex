@@ -1,5 +1,5 @@
 defmodule CryptoMonkey.Boundary.Signal.Item do
-  import Logger, only: [info: 1, warn: 1]
+  import Logger, only: [info: 1]
   # @enforce_keys [:received_signal]
 
   defstruct received_signal: "",
@@ -23,20 +23,28 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
     # item = struct(new_item, k_v(signal))
 
     item = k_v(signal)
+    has_algo = Map.has_key?(item, :algo)
 
-    case item.algo do
-      "" ->
-        item = %{item | received_signal: signal}
-        {:error, item}
+    case has_algo do
+      false ->
+        item =
+          item
+          |> Map.put(:received_signal, signal)
+          |> Map.put(:recognized_signal, false)
+          |> Map.put(:algo, "???")
 
-      _ ->
+        {:ok, signal} = Signals.create_signal(item)
+        info("New unrecognized Signal Map received")
+
+        {:ok, signal}
+
+      true ->
         item =
           item
           |> Map.put(:recognized_signal, true)
           |> Map.put(:received_signal, signal)
 
         {:ok, signal} = Signals.create_signal(item)
-
         info("New Signal Map received")
 
         {:ok, signal}
@@ -59,8 +67,9 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
         {:ok, %{item | recognized_signal: true}}
 
       {:ok, signal, :partial} ->
-        item = struct(new(), signal)
-        warn("String Signal with unknown Values found!")
+        item = struct(new(), signal) |> Map.put(:algo, "???")
+        info("String Signal with unknown Values found!")
+
         {:ok, item}
     end
   end
@@ -78,7 +87,7 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
     try do
       String.to_existing_atom(key)
     rescue
-      ArgumentError -> Logger.warn("Map Signal with unknown Values found!")
+      ArgumentError -> info("Map Signal with unknown Values found!")
     end
   end
 

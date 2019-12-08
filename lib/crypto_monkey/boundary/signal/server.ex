@@ -2,9 +2,10 @@ defmodule CryptoMonkey.Boundary.Signal.Server do
   use GenServer
   import Logger, only: [info: 1]
   alias CryptoMonkey.Boundary.Signal.{Item}
+  @name __MODULE__
 
   def start_link(signal) when is_list(signal) do
-    GenServer.start_link(__MODULE__, signal, name: __MODULE__)
+    GenServer.start_link(__MODULE__, signal, name: @name)
   end
 
   def new_signal(pid, signal) do

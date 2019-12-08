@@ -83,6 +83,8 @@ defmodule CryptoMonkey.Signals do
     {:ok, result}
   end
 
+  defp broadcast_change({:error, changeset}, _event), do: {:error, changeset}
+
   @doc """
   Updates a signal.
 
