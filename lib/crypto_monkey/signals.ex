@@ -7,6 +7,7 @@ defmodule CryptoMonkey.Signals do
   alias CryptoMonkey.Repo
 
   alias CryptoMonkey.Signals.Signal
+  alias CryptoMonkey.Signals.Center
 
   @topic "signals"
 
@@ -20,18 +21,8 @@ defmodule CryptoMonkey.Signals do
 
   """
   def list_signals do
-    Repo.all(Signal)
-  end
-
-  def list_signals_by_latest do
-    Signal
-    |> reverse_order()
-    |> Repo.all()
-  end
-
-  def list_last_5_signals do
-    list_signals_by_latest()
-    |> Enum.take(5)
+    # Repo.all(Signal)
+    Center.list_signals(Center)
   end
 
   @doc """

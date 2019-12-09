@@ -3,26 +3,24 @@ defmodule CryptoMonkeyWeb.SignalLive do
   require Logger
   alias CryptoMonkeyWeb.SignalView
   alias CryptoMonkey.Signals
+  alias CryptoMonkey.Signals.Center
 
   def render(assigns) do
     SignalView.render("index.html", assigns)
   end
 
-  def new do
-    %{
-      signals: []
-    }
+  def mount(_session, socket) do
+    # Signals
+    # returns %{signals: [Signal.t]}
+    db_signals = Signals.list_signals()
+    :ok = Signals.subscribe()
+
+    {:ok, assign(socket, db_signals)}
   end
 
-  def mount(_session, socket) do
-    state = new()
-
-    # Signals
-    signals = Signals.list_signals_by_latest()
-    :ok = Signals.subscribe()
-    state = %{state | signals: signals}
-
-    {:ok, assign(socket, state)}
+  def handle_info(%{topic: "signals", event: "list_signals", payload: payload}, socket) do
+    Logger.info("got new signals, overwritting memory")
+    {:noreply, assign(socket, :signals, payload)}
   end
 
   def handle_info(%{topic: "signals", event: "new_signal", payload: payload}, socket) do

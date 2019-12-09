@@ -18,7 +18,8 @@ defmodule CryptoMonkey.Application do
       # {CryptoMonkey.Worker, arg},
       {CryptoMonkey.Boundary.Signal.Server, []},
       {CryptoMonkey.Boundary.Kraken,
-       %{channels: ["pi_xbtusd", "pi_ethusd"], require_auth: true, debug: []}}
+       %{channels: ["pi_xbtusd", "pi_ethusd"], require_auth: true, debug: []}},
+      {CryptoMonkey.Signals.Center, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

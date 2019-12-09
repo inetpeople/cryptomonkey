@@ -14,8 +14,8 @@ defmodule CryptoMonkey.Signals.Signal do
     field :closed_at, :naive_datetime
     field :published_at, :naive_datetime
     field :confirmed_at, :naive_datetime
-
     belongs_to :closing_signal, __MODULE__
+
     timestamps()
   end
 

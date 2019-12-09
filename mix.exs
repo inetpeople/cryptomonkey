@@ -66,6 +66,11 @@ defmodule CryptoMonkey.MixProject do
       {:csv, "~> 2.3"},
       {:decimal, "~> 1.0"},
 
+      # schedule jobs
+      # {:quantum, "~> 2.3"},
+      # work with time
+      # {:timex, "~> 3.0"},
+
       #### Tests
       # {:excoveralls, "~> 0.10", only: :test},
       {:mix_test_watch, "~> 1.0.1", only: :dev, runtime: false},
