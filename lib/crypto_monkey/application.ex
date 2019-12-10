@@ -11,6 +11,7 @@ defmodule CryptoMonkey.Application do
     # List all child processes to be supervised
     children = [
       # Start the Ecto repository
+      CryptoMonkey.Connection,
       CryptoMonkey.Repo,
       # Start the endpoint when the application starts
       CryptoMonkeyWeb.Endpoint,

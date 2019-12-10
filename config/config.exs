@@ -20,6 +20,15 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
     signing_salt: "SECRET_SALTiFXVytYj700u0ennWln1llXXvI05N3"
   ]
 
+config :crypto_monkey, CryptoMonkey.Connection,
+  host: "localhost",
+  pool: [max_overflow: 10, size: 5],
+  port: 8086,
+  scheme: "http",
+  writer: Instream.Writer.Line,
+  json_decoder: {Jason, :decode!, [[keys: :atoms]]},
+  json_encoder: {Jason, :encode!, []}
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

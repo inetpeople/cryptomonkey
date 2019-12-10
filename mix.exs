@@ -59,6 +59,9 @@ defmodule CryptoMonkey.MixProject do
       # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
 
+      ##### DB
+      {:instream, "~> 0.22"},
+
       #### Helpers
       # {:ex_money, "~> 4.0"},
       # {:phoenix_html_simplified_helpers, "~> 2.1"}
@@ -69,7 +72,7 @@ defmodule CryptoMonkey.MixProject do
       # schedule jobs
       # {:quantum, "~> 2.3"},
       # work with time
-      # {:timex, "~> 3.0"},
+      {:timex, "~> 3.0"},
 
       #### Tests
       # {:excoveralls, "~> 0.10", only: :test},
