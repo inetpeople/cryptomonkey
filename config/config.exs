@@ -13,15 +13,16 @@ config :crypto_monkey,
 # Configures the endpoint
 config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "qysb1DHiMeocJVKEV9s4k6OZY0bjSoTga+iFXVytYj700u0ennWln1llXXvI05N3",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: CryptoMonkeyWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: CryptoMonkey.PubSub, adapter: Phoenix.PubSub.PG2],
   live_view: [
-    signing_salt: "SECRET_SALTiFXVytYj700u0ennWln1llXXvI05N3"
+    # mix phx.gen.secret 32
+    signing_salt: System.get_env("SECRET_LIVE_VIEW")
   ]
 
 config :crypto_monkey, CryptoMonkey.Connection,
-  host: "localhost",
+  host: "144.91.115.84",
   pool: [max_overflow: 10, size: 5],
   port: 8086,
   scheme: "http",
