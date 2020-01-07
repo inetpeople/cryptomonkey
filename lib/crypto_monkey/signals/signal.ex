@@ -2,6 +2,7 @@ defmodule CryptoMonkey.Signals.Signal do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
+  alias CryptoMonkey.Repo
 
   schema "signals" do
     field :algo, :string
@@ -52,74 +53,111 @@ defmodule CryptoMonkey.Signals.Signal do
   # GROUP BY
   # round(extract('epoch' from timestamp) / 300), name
 
+  # https://www.postgresql.org/docs/9.1/functions-datetime.html#FUNCTIONS-DATETIME-TRUNC
+
+  # https://hexdocs.pm/ecto_function/readme.html
+
+  # select  date_trunc('hour', val) + date_part('minute', val)::int / 5 * interval '5 min'
+
+  # select date_trunc('day', inserted_at) + date_part('hour', inserted_at)::int / 4 * interval '4 hour' as date,
+
   defmacro date_trunc(period, expr) do
     quote do
       fragment("date_trunc(?, ?)", unquote(period), unquote(expr))
     end
   end
 
-  defmacro date_trunc_format(period, format, expr) do
+  defmacro date_part(period, expr) do
     quote do
-      fragment("to_char(date_trunc(?, ?), ?)", unquote(period), unquote(expr), unquote(format))
+      fragment("date_part(?,?)", unquote(period), unquote(expr))
     end
   end
 
-  @doc "to_char function for formatting datetime as dd MON YYYY"
-  defmacro to_char(field, format) do
-    quote do
-      fragment("to_char(?, ?)", unquote(field), unquote(format))
-    end
+  defmacro interval(period) do
+    quote do: fragment("interval ?", unquote(period))
   end
 
-  @doc "Builds a query with row counts per inserted_at date"
-  def row_counts_by_date(algo) do
-    query =
-      from(s in __MODULE__,
-        where: s.algo == ^algo
-      )
-
-    from record in query,
-      group_by: to_char(record.inserted_at, "dd Mon YYYY"),
-      select: {to_char(record.inserted_at, "dd Mon YYYY"), count(record.id)}
+  defmacro between(date, start_date, end_date) do
+    quote do:
+            fragment(
+              "? BETWEEN ? AND ?",
+              unquote(date),
+              unquote(start_date),
+              unquote(end_date)
+            )
   end
 
-  def func(chart_timeframe, filter) do
-    query =
-      from(s in __MODULE__,
-        where: s.chart_timeframe == ^chart_timeframe
-      )
-
-    # IO.puts(filter)
-    # filter = Atom.to_string(filter)
-    case filter do
-      # "by_" <> period ->
-      #   from(d in Download,
-      #     where: d.release_id == ^release_id)
-      #     group_by: date_trunc(^period, d.day),
-      #     order_by: date_trunc(^period, d.day),
-      #     select: {date_trunc_format(^period, "YYYY-MM-DD", d.day), sum(d.downloads)})
-      :by_day ->
-        from(s in query,
-          group_by: date_trunc("inserted_at", s.inserted_at),
-          order_by: date_trunc("inserted_at", s.inserted_at),
-          select: {date_trunc_format("inserted_at", "YYYY-MM-DD", s.inserted_at), count("*")}
-        )
-
-      :by_week ->
-        from(s in query,
-          group_by: date_trunc("week", s.day),
-          order_by: date_trunc("week", s.day),
-          select: {date_trunc_format("week", "YYYY-MM-DD", s.day), sum(s.downloads)}
-        )
-
-      :by_month ->
-        from(s in query,
-          group_by: date_trunc("month", s.day),
-          order_by: date_trunc("month", s.day),
-          select: {date_trunc_format("month", "YYYY-MM", s.day), sum(s.downloads)}
-        )
-    end
+  def q do
+    from(signal in "signals",
+      group_by: [
+        date_trunc("day", signal.inserted_at) +
+          date_part("hour", signal.inserted_at) / 4 * interval("4 hour"),
+        signal.algo,
+        signal.ticker,
+        signal.exchange,
+        signal.chart_timeframe
+      ],
+      order_by:
+        date_trunc("day", signal.inserted_at) +
+          date_part("hour", signal.inserted_at) / 4 * interval("4 hour"),
+      select: %{
+        date:
+          date_trunc("day", signal.inserted_at) +
+            date_part("hour", signal.inserted_at) / 4 * interval("4 hour"),
+        signal_count: count(signal.signal_type),
+        algo: signal.algo,
+        ticker: signal.ticker,
+        exchange: signal.exchange,
+        chart_timeframe: signal.chart_timeframe,
+        lowest_price: min(signal.signal_price),
+        highest_price: max(signal.signal_price)
+      },
+      where: [chart_timeframe: "4H", signal_type: "BUY", algo: "ETH-I"],
+      where: between(signal.inserted_at, ^~U[2019-12-05 08:00:00Z], ^~U[2019-12-05 11:59:59Z])
+    )
   end
+
+  def sql do
+    ~s"""
+    select date_trunc('day', inserted_at) + (date_part('hour', inserted_at)::int / 4) * interval '4 hour' as date,
+    count(signal_type) as signal_count, algo, ticker, exchange, chart_timeframe, min(signal_price) as min_price, max(signal_price) as max_price
+    from "signals"
+    where chart_timeframe='4H' AND signal_type='BUY' AND inserted_at BETWEEN '2019-12-05 08:00:00' AND '2019-12-05 11:59:59' and algo='ETH-I'
+    group by date, algo, ticker, exchange, chart_timeframe
+    order by date
+    """
+  end
+
+  def four_hours_buy do
+    ~s"""
+    select date_trunc('day', inserted_at) + (date_part('hour', inserted_at)::int / 4) * interval '4 hour' as date,
+    count(signal_type) as signal_count, algo, ticker, exchange, chart_timeframe, min(signal_price) as min_price, max(signal_price) as max_price
+    from "signals"
+    where chart_timeframe='4H' AND signal_type='BUY'
+    group by date, algo, ticker, exchange, chart_timeframe
+    order by date
+    """
+  end
+
+  def result_to_maps(%Postgrex.Result{columns: _, rows: nil}), do: []
+
+  def result_to_maps(%Postgrex.Result{columns: col_nms, rows: rows}),
+    do: Enum.map(rows, fn row -> row_to_map(col_nms, row) end)
+
+  defp row_to_map(col_nms, vals),
+    do: Stream.zip(col_nms, vals) |> Enum.into(Map.new(), & &1)
+
+  def query(query) do
+    Ecto.Adapters.SQL.query!(Repo, query)
+    # |> result_to_maps()
+  end
+
+  # select date_trunc('day', inserted_at) + date_part('hour', inserted_at)::int / 4 * interval '4 hour' as date,
+  # count(signal_type), algo, ticker, exchange, chart_timeframe, min(signal_price) as min_price, max(signal_price) as max_price
+  # from "signals"
+  # where chart_timeframe='4H' AND signal_type='BUY' AND inserted_at BETWEEN '2019-12-05 08:00:00' AND '2019-12-05 11:59:59' and algo='ETH-I'
+  # group by date, algo, ticker, exchange, chart_timeframe
+  # order by date
 
   # defp will_confirm_at(signal) do
   #   signal

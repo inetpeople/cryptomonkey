@@ -9,3 +9,8 @@ User Roles
 https://dennisbeatty.com/2019/08/20/ecto-associations-in-phoenix-liveview-one-to-many.html
 Todo List with pubsub and liveview
 https://dennisbeatty.com/2019/04/24/how-to-create-a-todo-list-with-phoenix-liveview.html
+
+
+
+
+  # TODO: https://adamdelong.com/elixir-dynamic-maps/

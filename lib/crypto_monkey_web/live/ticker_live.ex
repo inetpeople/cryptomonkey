@@ -2,7 +2,6 @@ defmodule CryptoMonkeyWeb.TickerLive do
   use Phoenix.LiveView
   require Logger
 
-  # TODO: https://adamdelong.com/elixir-dynamic-maps/
   alias CryptoMonkeyWeb.TickerView
 
   def render(assigns) do
@@ -57,7 +56,8 @@ defmodule CryptoMonkeyWeb.TickerLive do
 
     # Signals
     # :ok = CryptoMonkey.Signals.subscribe()
-    signals = CryptoMonkey.Signals.list_last_5_signals()
+    signals = []
+    # signals = CryptoMonkey.Signals.list_last_5_signals()
     CryptoMonkeyWeb.Endpoint.subscribe("signals")
     # Kraken.get_account_balances_and_margins(Kraken)
     # Kraken.get_open_orders_verbose(Kraken)

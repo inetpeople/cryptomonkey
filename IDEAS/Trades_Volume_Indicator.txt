@@ -1,0 +1,20 @@
+1. group trades by size
+big trades buy or sell
+small trades bur or sell 
+exocharts.com tsize (search for youtube video)
+
+2. Show trades in candle ex. 15min 
+ask    bid    price
+volume volume price per minute
+
+
+3.
+Get amount of trades (trades + size, ask/bid) per time and calculate liquidation price.
+Find right moment to trigger with Open Interest.
+check order book and see if squeeze can be triggerd.
+add positions for end of squezze to enter market. 
+
+
+
+
+

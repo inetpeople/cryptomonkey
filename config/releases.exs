@@ -12,7 +12,7 @@ database_url =
     """
 
 config :crypto_monkey, CryptoMonkey.Repo,
-  ssl: true,
+  ssl: false,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
@@ -26,6 +26,8 @@ secret_key_base =
 config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
+
+# config :crypto_monkey, :influx_db_name, "crypto_monkey"
 
 # ## Using releases (Elixir v1.9+)
 #

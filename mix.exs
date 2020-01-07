@@ -43,7 +43,7 @@ defmodule CryptoMonkey.MixProject do
       {:phoenix, "~> 1.4.10"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.2.0"},
+      {:ecto_sql, "~> 3.3.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
@@ -58,6 +58,10 @@ defmodule CryptoMonkey.MixProject do
       ##### Http
       # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
+
+      ##### SSL Certificate Lets encrypt
+      # {:acme, "~> 0.5.1"},
+      # {:acmex, "~> 0.1.0"}, v2 letsencrypt
 
       ##### DB
       {:instream, "~> 0.22"},

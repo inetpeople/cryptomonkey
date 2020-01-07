@@ -62,9 +62,8 @@ defmodule CryptoMonkey.Signals do
 
   """
   def create_signal(attrs \\ %{}) do
-    %Signal{}
-    |> Signal.changeset(attrs)
-    |> Repo.insert()
+    Signal.from_map(attrs)
+    |> Signal.write()
     |> broadcast_change("new_signal")
   end
 

@@ -1,9 +1,12 @@
 defmodule CryptoMonkey.Boundary.Signal.Item do
   import Logger, only: [info: 1]
-  # @enforce_keys [:received_signal]
+
+  alias CryptoMonkey.Broadcast
+
+  @topic "inbound_signals"
 
   defstruct received_signal: "",
-            created_at: Time.utc_now(),
+            created_at: DateTime.utc_now() |> DateTime.to_unix(:millisecond),
             algo: "",
             ticker: "",
             exchange: "",
@@ -12,16 +15,11 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
             signal_price: "",
             recognized_signal: false
 
-  alias CryptoMonkey.{Signals, Signals.Signal}
-
   def new do
-    %Signal{}
+    %__MODULE__{}
   end
 
   def new(signal) when is_map(signal) do
-    # new_item = new()
-    # item = struct(new_item, k_v(signal))
-
     item = k_v(signal)
     has_algo = Map.has_key?(item, :algo)
 
@@ -33,10 +31,9 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
           |> Map.put(:recognized_signal, false)
           |> Map.put(:algo, "???")
 
-        {:ok, signal} = Signals.create_signal(item)
+        Broadcast.broadcast!(@topic, "new_signal_incomplete", item)
         info("New unrecognized Signal Map received")
-
-        {:ok, signal}
+        {:ok, item}
 
       true ->
         item =
@@ -44,10 +41,9 @@ defmodule CryptoMonkey.Boundary.Signal.Item do
           |> Map.put(:recognized_signal, true)
           |> Map.put(:received_signal, signal)
 
-        {:ok, signal} = Signals.create_signal(item)
+        Broadcast.broadcast!(@topic, "new_signal_map", item)
         info("New Signal Map received")
-
-        {:ok, signal}
+        {:ok, item}
     end
   end
 

@@ -1,12 +1,11 @@
 defmodule CryptoMonkey.Signals.Center do
   use GenServer
-  alias Phoenix.PubSub
+  alias CryptoMonkey.Broadcast
   alias CryptoMonkey.Repo
   alias CryptoMonkey.Signals.Signal
-  import Ecto.Query
-
+  # import Ecto.Query
   @name __MODULE__
-  @topic "signals"
+  @topic "signals_center"
 
   defstruct signals: []
 
@@ -41,22 +40,16 @@ defmodule CryptoMonkey.Signals.Center do
   # GenServer callbacks
 
   @impl true
-  @spec init(:ok) :: {:ok, CryptoMonkey.Signals.EventCenter.t()}
   def init(:ok) do
+    Broadcast.subscribe("inbound_signals")
     db_signals = list_signals()
-
-    # signals = %{
-    #   active_signals: active_signals(db_signals),
-    #   confirmed_signals: confirmed_signals(db_signals),
-    #   closed_signals: closed_signals(db_signals)
-    # }
 
     {:ok, %{signals: db_signals}}
   end
 
   @impl true
   def handle_call(:list_signals, _from, state) do
-    CryptoMonkeyWeb.Endpoint.broadcast(@topic, "list_signals", state)
+    Broadcast.broadcast(@topic, "list_signals", state)
     {:reply, state, state}
   end
 
@@ -66,13 +59,9 @@ defmodule CryptoMonkey.Signals.Center do
     {:noprely, state}
   end
 
-  def handle_cast(:list_signals, state) do
-    CryptoMonkeyWeb.Endpoint.broadcast(@topic, "list_signals", state)
-    {:noreply, state}
-  end
-
   @impl true
-  def handle_cast({:signal_closed, _signals}, state) do
+  def handle_cast(:list_signals, state) do
+    Broadcast.broadcast(@topic, "list_signals", state)
     {:noreply, state}
   end
 
@@ -91,15 +80,12 @@ defmodule CryptoMonkey.Signals.Center do
   #####
   def list_signals(), do: Repo.all(Signal)
 
-  @spec active_signals([Signal.t()]) :: [Signal.t()]
-  defp active_signals(signals) when is_list(signals),
-    do: signals |> Enum.filter(fn x -> x.closed_at == nil end)
+  # defp active_signals(signals) when is_list(signals),
+  #   do: signals |> Enum.filter(fn x -> x.closed_at == nil end)
 
-  @spec confirmed_signals([Signal.t()]) :: [Signal.t()]
-  defp confirmed_signals(signals) when is_list(signals),
-    do: signals |> Enum.filter(fn x -> x.confirmed_at != nil end)
+  # defp confirmed_signals(signals) when is_list(signals),
+  #   do: signals |> Enum.filter(fn x -> x.confirmed_at != nil end)
 
-  @spec closed_signals(Signal.t()) :: [Signal.t()]
-  defp closed_signals(signals) when is_list(signals),
-    do: signals |> Enum.filter(fn x -> x.closed_at != nil end)
+  # defp closed_signals(signals) when is_list(signals),
+  #   do: signals |> Enum.filter(fn x -> x.closed_at != nil end)
 end

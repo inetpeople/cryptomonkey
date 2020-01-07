@@ -30,6 +30,8 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
     ]
   ]
 
+config :crypto_monkey, :influx_db_name, "crypto_monkey_dev"
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

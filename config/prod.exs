@@ -16,6 +16,8 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :crypto_monkey, :influx_db_name, "crypto_monkey"
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

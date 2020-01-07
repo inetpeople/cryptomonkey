@@ -14,5 +14,7 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :crypto_monkey, :influx_db_name, "crypto_monkey_test"
+
 # Print only warnings and errors during test
 config :logger, level: :warn

@@ -21,7 +21,7 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
     signing_salt: System.get_env("SECRET_LIVE_VIEW")
   ]
 
-config :crypto_monkey, CryptoMonkey.Connection,
+config :crypto_monkey, CryptoMonkey.InfluxDB,
   host: "144.91.115.84",
   pool: [max_overflow: 10, size: 5],
   port: 8086,
