@@ -87,6 +87,10 @@ defmodule CryptoMonkey.Signals.Signal do
             )
   end
 
+
+#   from q in Post,
+#   select: [fragment("date_trunc('day', ?) as date", q.inserted_at],
+#   group_by: fragment("date")
   def q do
     from(signal in "signals",
       group_by: [
@@ -116,6 +120,12 @@ defmodule CryptoMonkey.Signals.Signal do
       where: between(signal.inserted_at, ^~U[2019-12-05 08:00:00Z], ^~U[2019-12-05 11:59:59Z])
     )
   end
+
+
+  # https://stackoverflow.com/questions/7299342/what-is-the-fastest-way-to-truncate-timestamps-to-5-minutes-in-postgres
+
+  # {trunc, part, interval, chart_timeframe}
+  # [{'day', 'hour', '1 hour', '1H'}, {'week', 'day', '1 day', '1D'}, {'hour', 'minute', '5 minute', '5M'}]
 
   def sql do
     ~s"""
