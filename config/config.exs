@@ -15,7 +15,7 @@ config :crypto_monkey, CryptoMonkeyWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: System.get_env("SECRET_KEY_BASE"),
   render_errors: [view: CryptoMonkeyWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: CryptoMonkey.PubSub, adapter: Phoenix.PubSub.PG2],
+  pubsub_server: CryptoMonkey.PubSub,
   live_view: [
     # mix phx.gen.secret 32
     signing_salt: System.get_env("SECRET_LIVE_VIEW")

@@ -33,7 +33,7 @@ defmodule CryptoMonkeyWeb.MakerDaoLive do
     }
   end
 
-  def mount(_session, socket) do
+  def mount(_params, _session, socket) do
     state = new()
     :ok = CryptoMonkeyWeb.Endpoint.subscribe(@topic)
     play("eth_historical_prices_copy.csv")

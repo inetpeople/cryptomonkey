@@ -5,7 +5,7 @@ defmodule CryptoMonkey.MixProject do
     [
       app: :crypto_monkey,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -40,23 +40,25 @@ defmodule CryptoMonkey.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.10"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.3.0"},
+      {:phoenix, "~> 1.5.1"},
+      {:phoenix_ecto, "~> 4.1"},
+      {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
+      {:phoenix_live_view, "~> 0.12.0"},
+      {:floki, ">= 0.0.0", only: :test},
       {:phoenix_html, "~> 2.13"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:phoenix_live_dashboard, "~> 0.1"},
+      {:telemetry_metrics, "~> 0.4"},
+      {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
 
       ##### RealTime
-      {:websockex, "~> 0.4.2"},
-      {:phoenix_live_view, "~> 0.4.1"},
+      # {:websockex, "~> 0.4.2"},
 
       ##### Http
-      # {:floki, ">= 0.0.0", only: :test},
       {:httpoison, "~> 1.6"},
 
       ##### SSL Certificate Lets encrypt
@@ -113,6 +115,7 @@ defmodule CryptoMonkey.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
+      setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
       "ecto.seed": ["run priv/repo/seeds.#{Mix.env()}.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "ecto.seed"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],

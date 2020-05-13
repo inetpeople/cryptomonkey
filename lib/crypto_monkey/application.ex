@@ -13,6 +13,10 @@ defmodule CryptoMonkey.Application do
       # Start the DBs
       CryptoMonkey.InfluxDB.child_spec(),
       CryptoMonkey.Repo,
+      # Start the Telemetry supervisor
+      CryptoMonkeyWeb.Telemetry,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: CryptoMonkey.PubSub},
       # Start the endpoint when the application starts
       CryptoMonkeyWeb.Endpoint,
       # Starts workers
@@ -25,9 +29,8 @@ defmodule CryptoMonkey.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: CryptoMonkey.Supervisor]
-
     Supervisor.start_link(children, opts)
-    |> create_influx_db
+    # |> create_influx_db
   end
 
   # Tell Phoenix to update the endpoint configuration
@@ -37,11 +40,11 @@ defmodule CryptoMonkey.Application do
     :ok
   end
 
-  def create_influx_db({:ok, _pid} = result) do
-    CryptoMonkey.InfluxDB.wait_till_up()
-    CryptoMonkey.InfluxDB.create_database()
-    # CryptoMonkey.InfluxDB.create_retention_policies
-    # CryptoMonkey.InfluxDB.create_continuous_queries
-    result
-  end
+  # def create_influx_db({:ok, _pid} = result) do
+  #   CryptoMonkey.InfluxDB.wait_till_up()
+  #   CryptoMonkey.InfluxDB.create_database()
+  #   # CryptoMonkey.InfluxDB.create_retention_policies
+  #   # CryptoMonkey.InfluxDB.create_continuous_queries
+  #   result
+  # end
 end

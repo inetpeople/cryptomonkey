@@ -9,7 +9,7 @@ defmodule CryptoMonkeyWeb.SignalLive do
     SignalView.render("index.html", assigns)
   end
 
-  def mount(_session, socket) do
+  def mount(_params, _session, socket) do
     # Signals
     # returns %{signals: [Signal.t]}
     db_signals = Signals.list_signals()
