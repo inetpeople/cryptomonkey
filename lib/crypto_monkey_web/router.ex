@@ -21,22 +21,20 @@ defmodule CryptoMonkeyWeb.Router do
 
   scope "/", CryptoMonkeyWeb do
     pipe_through :browser
+
+    live "/", PageLive, :index
+
     # , session: [:user_id]
-    live "/ticker", TickerLive
+    live "/ticker2", Ticker2Live
     # , session: [:user_id]
     live "/signals", SignalLive
     # , session: [:user_id]
     live "/makerdao", MakerDaoLive
 
-    live "/tests", TestLive.Index, :index
-    live "/tests/new", TestLive.Index, :new
-    live "/tests/:id/edit", TestLive.Index, :edit
-
-    live "/tests/:id", TestLive.Show, :show
-    live "/tests/:id/show/edit", TestLive.Show, :edit
-
     # get "/", PageController, :index
-    live "/", PageLive, :index
+
+    live "/tickers", TickerLive.Index, :index
+    live "/tickers/:id", TickerLive.Show, :show
   end
 
   #### API ####

@@ -16,6 +16,7 @@ defmodule CryptoMonkey.Signals do
 
   ## Examples
 
+
       iex> list_signals()
       [%Signal{}, ...]
 
@@ -62,8 +63,11 @@ defmodule CryptoMonkey.Signals do
 
   """
   def create_signal(attrs \\ %{}) do
-    Signal.from_map(attrs)
-    |> Signal.write()
+    %Signal{}
+    |> Signal.changeset(attrs)
+    |> Repo.insert()
+    # Signal.from_map(attrs)
+    # |> Signal.write()
     |> broadcast_change("new_signal")
   end
 

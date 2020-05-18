@@ -14,35 +14,38 @@ end
 alias CryptoMonkey.Signals
 alias CryptoMonkey.Signals.Signal
 alias CryptoMonkey.Repo
+require Logger
 
 signals = File.read!("./priv/data/dev/signals.txt") |> :erlang.binary_to_term()
 
-Enum.map(signals, fn data ->
-  %{
-    __meta__: _,
-    __struct__: _,
-    id: _,
-    received_signal: _,
-    recognized_signal: _,
-    updated_at: _,
-    inserted_at: time,
-    chart_timeframe: ctf,
-    signal_price: price,
-    signal_type: signal,
-    algo: algo,
-    exchange: exchange,
-    ticker: ticker
-  } = data
-
-  %Signal{
-    chart_timeframe: ctf,
-    signal_price: price |> Helper.convert_price(),
-    signal_type: signal,
-    algo: Helper.clean_str(algo),
-    exchange: exchange,
-    ticker: ticker
-    # timestamp: time |> DateTime.from_naive!("Etc/UTC") |> DateTime.to_unix(:nanosecond)
-  }
+Enum.each(signals, fn data ->
+  Repo.insert(data)
 end)
-|> Signal.changeset(%{})
-|> Repo.insert_or_update()
+
+# Enum.map(signals, fn data ->
+#   %{
+#     __meta__: _,
+#     __struct__: _,
+#     id: _,
+#     received_signal: _,
+#     recognized_signal: _,
+#     updated_at: _,
+#     inserted_at: time,
+#     chart_timeframe: ctf,
+#     signal_price: price,
+#     signal_type: signal,
+#     algo: algo,
+#     exchange: exchange,
+#     ticker: ticker
+#   } = data
+
+#   %{
+#     chart_timeframe: ctf,
+#     signal_price: price |> Helper.convert_price(),
+#     signal_type: signal,
+#     algo: Helper.clean_str(algo),
+#     exchange: exchange,
+#     ticker: ticker
+#     # timestamp: time |> DateTime.from_naive!("Etc/UTC") |> DateTime.to_unix(:nanosecond)
+#   }
+# end)

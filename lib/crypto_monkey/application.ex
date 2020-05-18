@@ -5,8 +5,6 @@ defmodule CryptoMonkey.Application do
 
   use Application
 
-  import Supervisor.Spec
-
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [

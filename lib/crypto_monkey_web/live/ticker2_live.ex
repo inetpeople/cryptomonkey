@@ -1,10 +1,11 @@
-defmodule CryptoMonkeyWeb.TickerLive do
+defmodule CryptoMonkeyWeb.Ticker2Live do
   use Phoenix.LiveView
   require Logger
 
   alias CryptoMonkeyWeb.TickerView
 
   def render(assigns) do
+    IO.puts("RENDER #{inspect(self())}")
     TickerView.render("index.html", assigns)
   end
 
@@ -47,6 +48,8 @@ defmodule CryptoMonkeyWeb.TickerLive do
   alias CryptoMonkey.Boundary.Kraken
 
   def mount(_params, _session, socket) do
+    IO.puts("MOUNT #{inspect(self())}")
+
     state = new()
     product_ids = state.subscribed_tickers
 
@@ -73,8 +76,10 @@ defmodule CryptoMonkeyWeb.TickerLive do
   end
 
   def handle_info({"tickers", payload}, socket) do
+    IO.puts("TICKERS #{inspect(self())}")
+
     msg = map_to_atom(payload)
-    atom_key = String.downcase(msg.product_id) |> String.to_atom()
+    atom_key = String.downcase(msg.product_id) |> String.to_existing_atom()
     # new_tickers = socket.assigns.tickers |> List.keyreplace(atom_key, 0, {atom_key, msg})
     new_tickers = socket.assigns.tickers |> Map.replace!(atom_key, msg)
     {:noreply, assign(socket, :tickers, new_tickers)}
