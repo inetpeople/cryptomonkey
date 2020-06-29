@@ -6,8 +6,8 @@
     <input type="text" name="q" value="<%= @query %>" placeholder="Live dependency search" list="results"
       autocomplete="off" />
     <datalist id="results">
-      <%= for {app, _vsn} <- @results do %>
-      <option value="<%= app %>"><%= app %></option>
+      <%= for result <- @results do %>
+      <option value="<%= result %>"><%= result %></option>
       <% end %>
     </datalist>
     <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
