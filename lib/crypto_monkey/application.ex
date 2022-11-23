@@ -19,8 +19,8 @@ defmodule CryptoMonkey.Application do
       CryptoMonkeyWeb.Endpoint,
       # Starts workers
       {CryptoMonkey.Boundary.Signal.Server, []},
-      {CryptoMonkey.Boundary.Kraken,
-       %{channels: ["pi_xbtusd", "pi_ethusd"], require_auth: true, debug: []}},
+      # {CryptoMonkey.Boundary.Kraken,
+      #  %{channels: ["pi_xbtusd", "pi_ethusd"], require_auth: true, debug: []}},
       {CryptoMonkey.Signals.Center, []}
     ]
 
